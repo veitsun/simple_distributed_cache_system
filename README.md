@@ -9,6 +9,8 @@ docker compose up	# build and run 3 server
 # or
 docker build -t cacheserver .   # only get container
 ```
+# 测试脚本
+./sdcs-test.sh {cache_server_number}
 
 [Test Script](https://github.com/ruini-classes/sdcs-testsuit)
 
