@@ -13,15 +13,25 @@ service Cache {
 message GetRequest {
     string key = 1;
 }
-
+message StringArray {
+    repeated  string values = 1;
+}
 message GetReply {
     string key = 1;
-    string value = 2;
+    oneof value {
+    int32 int_value = 2;             
+    string string_value = 3;         
+    StringArray string_array = 4;
+  }
 }
 
 message SetRequest {
-    string key = 1;
-    string value = 2;
+     string key = 1;
+    oneof value {
+    int32 int_value = 2;             
+    string string_value = 3;         
+    StringArray string_array = 4;
+  }
 }
 
 message SetReply {
@@ -35,4 +45,3 @@ message DeleteRequest {
 message DeleteReply {
     int32 num = 1;
 }
-

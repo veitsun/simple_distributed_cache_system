@@ -1,12 +1,13 @@
 package main
-
+--xianzai 黄师兄的
 import (
-  "fmt"	
-	"context"
-  "time"
-  "google.golang.org/grpc"
-  "google.golang.org/grpc/credentials/insecure"
-  pb  "sunwei.top/cacheserver/cache"
+		"context"
+		"fmt"
+    "time"
+
+    "google.golang.org/grpc"
+    "google.golang.org/grpc/credentials/insecure"
+    pb "sunwei.top/cacheserver/cache"
 )
 
 func setupClient() {
@@ -18,30 +19,30 @@ func setupClient() {
 	if err != nil {
 		fmt.Println("fail to dial: %v", err)
 	}
-  fmt.Println("Set up client for",address[2])
+  fmt.Println("Set up client for", address[2])
 
 	conn[1], err = grpc.Dial(address[3], opts...)
 	if err != nil {
 		fmt.Println("fail to dial: %v", err)
 	}
-  fmt.Println("Set up client for",address[3])
+  fmt.Println("Set up client for", address[3])
 
   client[0] = pb.NewCacheClient(conn[0])
   client[1] = pb.NewCacheClient(conn[1])
 }
 
 // rpc client Get request
-func CacheGet(client pb.CacheClient, req *pb.GetRequest) {
+func CacheGet(client pb.CacheClient, req *pb.GetRequest) (interface{}, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	_, err := client.GetCache(ctx, req)
+	getval, err := client.GetCache(ctx, req) //getval is a pointer
 	if err != nil {
 		fmt.Println("client.GetCache failed.")
 	}
 }
 
 // rpc client Set request
-func CacheSet(client pb.CacheClient, req *pb.SetRequest) {
+func CacheSet(client pb.CacheClient, req *pb.SetRequest) (interface{}, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	_, err := client.SetCache(ctx, req)
@@ -51,11 +52,12 @@ func CacheSet(client pb.CacheClient, req *pb.SetRequest) {
 }
 
 // rpc client Delete request
-func CacheDelete(client pb.CacheClient, req *pb.DeleteRequest) {
+func CacheDelete(client pb.CacheClient, req *pb.DeleteRequest) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	_, err := client.DeleteCache(ctx, req)
 	if err != nil {
 		fmt.Println("client.DeleteCache failed.")
 	}
+	return err
 }
